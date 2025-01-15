@@ -1,0 +1,26 @@
+version: "3"
+services:
+  main:
+    build:
+      args:
+        GID: 5032
+        UID: 5032
+        USER_NAME: kazuma_nis
+      context: ./
+    container_name: cali
+    environment:
+      DISPLAY: :0
+      QT_X11_NO_MITSHM: 1
+    image: cali
+    ports:
+      - target: 6090
+        published: 6090
+    shm_size: 10.24gb
+    tty: True
+    volumes:
+      - type: bind
+        source: ./
+        target: /app/
+      - type: bind
+        source: /tmp/.X11-unix/
+        target: /tmp/.X11-unix/
