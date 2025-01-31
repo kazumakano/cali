@@ -7,6 +7,6 @@ RUN useradd --gid $GID --create-home --shell /bin/bash --uid $UID $USER_NAME
 
 USER $UID:$GID
 
-RUN echo source /catkin_ws/devel/setup.sh >> ~/.bashrc
+RUN echo source /catkin_ws/devel/setup.bash >> ~/.bashrc
 
 WORKDIR /app/
