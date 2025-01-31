@@ -3,7 +3,7 @@ import os.path as path
 import yaml
 
 
-def conv(src_file: str) -> None:
+def change(src_file: str) -> None:
     with open(src_file) as f:
         cam = yaml.safe_load(f)["cam0"]
 
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--src_file", required=True, help="specify source file", metavar="PATH_TO_SRC_FILE")    # yaml format for kalibr
 
-    conv(parser.parse_args().src_file)
+    change(parser.parse_args().src_file)
