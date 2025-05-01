@@ -4,4 +4,4 @@
 BAG_DIR=$1
 CAM_NAME=$2
 
-rosbag record rosout /camera/image_raw /cam/image_raw -O ${BAG_DIR%/}/$CAM_NAME
+rosbag record rosout /camera/image_raw /cam/image_raw --output-name=${BAG_DIR%/}/$CAM_NAME
