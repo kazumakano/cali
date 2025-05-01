@@ -1,7 +1,8 @@
 # Subscribe video from topic '/cam/image_raw' and '/cam/image_raw' and save to bag.
 # Press Ctrl + C to exit.
 
-BAG_DIR=$1     # Path to bag directory.
-CAM_NAME=$2    # Camera name.
+CAM_NAME=$1      # Camera name.
+RESULT_DIR=$2    # Path to result directory.
 
-rosbag record rosout /camera/image_raw /cam/image_raw --output-name=$BAG_DIR/$CAM_NAME
+mkdir --parents $RESULT_DIR/$CAM_NAME/
+rosbag record rosout /camera/image_raw /cam/image_raw --output-name=$RESULT_DIR/$CAM_NAME/video
