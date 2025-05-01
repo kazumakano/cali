@@ -1,4 +1,4 @@
-# start system master
+# Start system master.
 
 # supervisord
 roscore
