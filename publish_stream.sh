@@ -2,4 +2,4 @@
 
 URI=$1    # schemeless
 
-roslaunch gstreamer_cv rtsp_single_stream.launch rtsp_url:=$1
+roslaunch gstreamer_cv rtsp_single_stream.launch rtsp_url:=$URI
