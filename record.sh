@@ -1,5 +1,5 @@
-# Subscribe video from topic '/cam/image_raw' and '/cam/image_raw' and save to bag.
-# Press Ctrl + C to exit.
+# Subscribe video from topic '/cam/image_raw' and '/cam/image_raw' and save to bag file.
+# Press Ctrl + C to terminate.
 
 CAM_NAME=$1      # Camera name.
 RESULT_DIR=$2    # Path to result directory.

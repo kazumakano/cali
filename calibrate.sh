@@ -1,4 +1,4 @@
-# Conduct calibration with bag.
+# Conduct calibration with bag file.
 
 BOARD_FILE=$1                # Path to board file.
 CAM_NAME=$2                  # Camera name.
