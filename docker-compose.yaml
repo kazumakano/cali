@@ -22,5 +22,8 @@ services:
         source: ./
         target: /app/
       - type: bind
+        source: /mnt/gazania/trusco-mp4/
+        target: /mp4/
+      - type: bind
         source: /tmp/.X11-unix/
         target: /tmp/.X11-unix/
