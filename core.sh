@@ -1,4 +1,4 @@
-# Start system master.
+# Start node master.
 
 # supervisord
 roscore
