@@ -5,6 +5,11 @@ CAM_NAME=$2                  # Camera name.
 RESULT_DIR=$3                # Path to result directory.
 FILE_OR_STREAM=${4:-file}    # Whether file or stream. Default is file.
 
+if [ $# != 3 ] && [ $# != 4 ]; then
+    echo usage: ./calibrate.sh PATH_TO_BOARD_FILE CAM_NAME PATH_TO_RESULT_DIR [FILE_OR_STREAM]
+    exit
+fi
+
 if [ $FILE_OR_STREAM = file ]; then
     rosrun kalibr tartan_calibrate --bag $RESULT_DIR/$CAM_NAME/video.bag --target $BOARD_FILE --topics /camera/image_raw --models ds-none --save_dir $RESULT_DIR/$CAM_NAME/
 elif [ $FILE_OR_STREAM = stream ]; then
