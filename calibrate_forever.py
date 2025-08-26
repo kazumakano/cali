@@ -3,7 +3,7 @@ import os
 import os.path as path
 from asyncio import subprocess as async_subprocess
 
-MAX_TASK_NUM  = 2
+MAX_TASK_NUM  = 10
 
 async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> None:
     task_queue: dict[str, dict[str, async_subprocess.Process | asyncio.Task]] = {}
