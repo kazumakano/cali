@@ -11,7 +11,7 @@ async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> No
     try:
         while True:
             for cn_1 in os.listdir(result_dir):
-                if not path.exists(path.join(result_dir, cn_1, "log1-camchain.yaml")):
+                if path.exists(path.join(result_dir, cn_1, "video.bag")) and not path.exists(path.join(result_dir, cn_1, "log1-camchain.yaml")):
                     if len(task_queue) >= MAX_TASK_NUM:
                         done_tasks, _ = await asyncio.wait([d["task"] for d in task_queue.values()], return_when=asyncio.FIRST_COMPLETED)
                         for cn_2, d in task_queue.copy().items():
