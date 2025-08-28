@@ -6,12 +6,6 @@ from typing import Dict, List, Union
 
 MAX_TASK_NUM  = 10
 
-async def _parse_err(src: asyncio.StreamReader, tgt: List[str]) -> None:
-    async for l in src:
-        l = l.decode().strip()
-        if "Error" in l:
-            tgt.append(l)
-
 def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str, Dict[str, Union[async_subprocess.Process, asyncio.Task]]]) -> None:
     for cn, d in task_queue.items():
         if d["task"] == done_task:
@@ -27,6 +21,12 @@ def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str
         print()
 
     task_queue.pop(cn)
+
+async def _parse_err(src: asyncio.StreamReader, tgt: List[str]) -> None:
+    async for l in src:
+        l = l.decode().strip()
+        if "Error" in l:
+            tgt.append(l)
 
 async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> None:
     task_queue: Dict[str, Dict[str, Union[List[str], async_subprocess.Process, asyncio.Task]]] = {}
