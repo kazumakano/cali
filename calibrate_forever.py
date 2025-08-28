@@ -2,18 +2,34 @@ import asyncio
 import os
 import os.path as path
 from asyncio import subprocess as async_subprocess
+from typing import Dict, List, Union
 
 MAX_TASK_NUM  = 10
 
-def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: dict[str, dict[str, async_subprocess.Process | asyncio.Task]]) -> None:
+async def _parse_err(src: asyncio.StreamReader, tgt: List[str]) -> None:
+    async for l in src:
+        l = l.decode().strip()
+        if "Error" in l:
+            tgt.append(l)
+
+def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str, Dict[str, Union[async_subprocess.Process, asyncio.Task]]]) -> None:
     for cn, d in task_queue.items():
         if d["task"] == done_task:
             break
-    print(f"calibration {'completed' if path.exists(path.join(result_dir, cn, 'log1-camchain.yaml')) else 'failed'} for camera {cn}")
+
+    if path.exists(path.join(result_dir, cn, "log1-camchain.yaml")):
+        print(f"calibration completed for camera {cn}")
+        print()
+    else:
+        print(f"calibration failed for camera {cn}")
+        for e in d["errs"]:
+            print(e)
+        print()
+
     task_queue.pop(cn)
 
 async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> None:
-    task_queue: dict[str, dict[str, async_subprocess.Process | asyncio.Task]] = {}
+    task_queue: Dict[str, Dict[str, Union[List[str], async_subprocess.Process, asyncio.Task]]] = {}
 
     try:
         while True:
@@ -22,9 +38,10 @@ async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> No
                     if len(task_queue) >= MAX_TASK_NUM:
                         await asyncio.wait([d["task"] for d in task_queue.values()], return_when=asyncio.FIRST_COMPLETED)
 
-                    proc = await asyncio.create_subprocess_shell(f"/app/calibrate.sh {board_file} {cn} {result_dir} {'stream' if use_stream else 'file'} > {path.join(result_dir, cn, 'log.txt')} 2> {path.join(result_dir, cn, 'error.txt')}")
-                    task_queue[cn] = {"proc": proc, "task": asyncio.create_task(proc.wait())}
+                    proc = await asyncio.create_subprocess_shell(f"/app/calibrate.sh {board_file} {cn} {result_dir} {'stream' if use_stream else 'file'}", stdout=async_subprocess.DEVNULL, stderr=async_subprocess.PIPE)
+                    task_queue[cn] = {"errs": [], "proc": proc, "task": asyncio.create_task(proc.wait())}
                     task_queue[cn]["task"].add_done_callback(lambda t: _on_task_done(t, result_dir, task_queue))
+                    asyncio.create_task(_parse_err(task_queue[cn]["proc"].stderr, task_queue[cn]["errs"]))
 
             await asyncio.sleep(1)
 
