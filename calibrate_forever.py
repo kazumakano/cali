@@ -13,12 +13,11 @@ def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str
 
     if path.exists(path.join(result_dir, cn, "log1-camchain.yaml")):
         print(f"calibration completed for camera {cn}")
-        print()
     else:
         print(f"calibration failed for camera {cn}")
         for e in d["errs"]:
             print(e)
-        print()
+    print()
 
     task_queue.pop(cn)
 
@@ -40,8 +39,8 @@ async def cali(board_file: str, result_dir: str, use_stream: bool = False) -> No
 
                     proc = await asyncio.create_subprocess_shell(f"/app/calibrate.sh {board_file} {cn} {result_dir} {'stream' if use_stream else 'file'}", stdout=async_subprocess.DEVNULL, stderr=async_subprocess.PIPE)
                     task_queue[cn] = {"errs": [], "proc": proc, "task": asyncio.create_task(proc.wait())}
-                    task_queue[cn]["task"].add_done_callback(lambda t: _on_task_done(t, result_dir, task_queue))
                     asyncio.create_task(_parse_err(task_queue[cn]["proc"].stderr, task_queue[cn]["errs"]))
+                    task_queue[cn]["task"].add_done_callback(lambda t: _on_task_done(t, result_dir, task_queue))
 
             await asyncio.sleep(1)
 
