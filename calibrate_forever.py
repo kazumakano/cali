@@ -6,7 +6,7 @@ from typing import Dict, List, Union
 
 MAX_TASK_NUM  = 10
 
-def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str, Dict[str, Union[async_subprocess.Process, asyncio.Task]]]) -> None:
+def _on_task_done(done_task: asyncio.Task, result_dir: str, task_queue: Dict[str, Dict[str, Union[List[str], async_subprocess.Process, asyncio.Task]]]) -> None:
     for cn, d in task_queue.items():
         if d["task"] == done_task:
             break
